@@ -1,3 +1,3 @@
-if (window.GLOBAL_DEPENDENCY) {
-  document.getElementById('app').innerText = `Loaded after vendor.js, GLOBAL_DEPENDENCY is ${window.GLOBAL_DEPENDENCY}`;
+if (window.VENDOR_DEPENDENCY) {
+  document.getElementById('app').innerText = `Executed after vendor.js, VENDOR_DEPENDENCY is ${window.VENDOR_DEPENDENCY}`;
 }

@@ -1,1 +1,1 @@
-window.GLOBAL_DEPENDENCY = 'foo';
+window.VENDOR_DEPENDENCY = 'foo';
