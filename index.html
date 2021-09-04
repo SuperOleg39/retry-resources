@@ -2,65 +2,65 @@
 <head>
   <script>
     (function () {
-      const primaryDomain = 'https://cdn-first.com/';
-      const fallbackDomain = 'https://cdn-second.com/';
-      const retriedResourcesList = {};
-      const maxRetries = 1;
+const primaryDomain = 'https://cdn-first.com/';
+const fallbackDomain = './assets/';
+const retriedResourcesList = {};
+const maxRetries = 1;
 
-      function retry(event) {
-        const tag = event.target;
-        const tagName = tag.tagName && tag.tagName.toLowerCase();
+function retry(event) {
+  const tag = event.target;
+  const tagName = tag.tagName && tag.tagName.toLowerCase();
 
-        if (tagName !== 'link' && tagName !== 'script') {
-          return;
-        }
+  if (tagName !== 'link' && tagName !== 'script') {
+    return;
+  }
 
-        const isLink = tagName === 'link';
-        const failedUrl = isLink ? tag.href : tag.src;
-        const fallbackUrl = getFallbackUrl(failedUrl);
+  const isLink = tagName === 'link';
+  const failedUrl = isLink ? tag.href : tag.src;
+  const fallbackUrl = getFallbackUrl(failedUrl);
 
-        if (!retriedResourcesList[fallbackUrl]) {
-          retriedResourcesList[fallbackUrl] = 1;
-        } else if (retriedResourcesList[fallbackUrl] < maxRetries) {
-          retriedResourcesList[fallbackUrl] = retriedResourcesList[fallbackUrl] + 1;
-        } else {
-          return;
-        }
+  if (!retriedResourcesList[fallbackUrl]) {
+    retriedResourcesList[fallbackUrl] = 1;
+  } else if (retriedResourcesList[fallbackUrl] < maxRetries) {
+    retriedResourcesList[fallbackUrl] = retriedResourcesList[fallbackUrl] + 1;
+  } else {
+    return;
+  }
 
-        const newTag = isLink ? createLink(tag, fallbackUrl) : createScript(tag, fallbackUrl);
+  const newTag = isLink ? createLink(tag, fallbackUrl) : createScript(tag, fallbackUrl);
 
-        tag.parentNode.insertBefore(newTag, tag);
-      }
+  tag.parentNode.insertBefore(newTag, tag);
+}
 
-      function getFallbackUrl(url) {
-          if (url.indexOf(primaryDomain) === 0) {
-            return url.replace(primaryDomain, fallbackDomain);
-          }
+function getFallbackUrl(url) {
+    if (url.indexOf(primaryDomain) === 0) {
+      return url.replace(primaryDomain, fallbackDomain);
+    }
 
-        return url;
-      }
+  return url;
+}
 
-      function createLink(tag, fallbackUrl) {
-        const newTag = document.createElement('link');
+function createLink(tag, fallbackUrl) {
+  const newTag = document.createElement('link');
 
-        newTag.href = fallbackUrl;
-        newTag.rel = 'stylesheet';
+  newTag.href = fallbackUrl;
+  newTag.rel = 'stylesheet';
 
-        return newTag;
-      }
+  return newTag;
+}
 
-      function createScript(tag, fallbackUrl) {
-        const newTag = document.createElement('script');
+function createScript(tag, fallbackUrl) {
+  const newTag = document.createElement('script');
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', fallbackUrl, false);
-        xhr.send();
-        newTag.text = xhr.responseText;
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', fallbackUrl, false);
+  xhr.send();
+  newTag.text = xhr.responseText;
 
-        return newTag;
-      }
+  return newTag;
+}
 
-      window.addEventListener('error', retry, true);
+window.addEventListener('error', retry, true);
     })();
   </script>
 
